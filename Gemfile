@@ -22,7 +22,7 @@ gem 'nokogiri'
 gem 'csv_shaper'
 gem 'andand', github: 'raganwald/andand'
 gem 'foreigner'
-gem 'responders', '~> 1.1' # Can't move above 1.1 until migrating to rails 4.2+
+gem 'responders'#, '~> 1.1' # Can't move above 1.1 until migrating to rails 4.2+
 gem 'friendly_id', '~> 5'
 gem 'active_record-acts_as'
 gem 'acts_as_list'
@@ -100,7 +100,6 @@ gem 'omniauth-google-oauth2'
 gem 'omniauth-cas'
 gem 'cancancan'
 gem 'activeadmin', github: 'activeadmin'
-gem "active_admin_import" , github: 'activeadmin-plugins/active_admin_import'
 gem 'active_skin', github: 'rstgroup/active_skin'
 gem 'exception_handler'
 

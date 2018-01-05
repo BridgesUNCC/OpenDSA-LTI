@@ -25,5 +25,11 @@ module CodeWorkout
 
     # Custom directories with classes and modules you want to be autoloadable.
     # config.autoload_paths += %W(#{config.root}/extras)
+  
+    # Exception Handler
+    config.exception_handler = {
+      db: true
+    }
+  
   end
 end
