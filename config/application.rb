@@ -31,6 +31,9 @@ module CodeWorkout
     config.exception_handler = {
       db: true
     }
+
+    # configure delayed job system
+    config.active_job.queue_adapter = :delayed_job
   
   end
 end

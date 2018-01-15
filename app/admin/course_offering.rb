@@ -10,11 +10,11 @@ ActiveAdmin.register CourseOffering, sort_order: :created_at_asc do
                 :lms_instance_id, :lms_course_code, :lms_course_num,
                 inst_books_attributes: [ :id, :course_offering_id, :user_id, :title, :desc, :template, :_destroy ]
 
-  action_item only: [:edit] do
-    if current_user.global_role.is_admin?
-      link_to "Delete", { action: :destroy }, method: :delete
-    end
-  end
+  # action_item only: [:edit] do
+  #   if current_user.global_role.is_admin?
+  #     link_to "Delete", { action: :destroy }, method: :delete
+  #   end
+  # end
 
   controller do
 
