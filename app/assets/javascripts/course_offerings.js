@@ -352,7 +352,7 @@
         var selectbar1 = $('#combobox').find('option:selected').text();
         //var selectbar2 = $('#comb').find('option:selected').text();
         // || selectbar2 === ''
-        debugger;
+        //debugger;
         console.log(selectbar1)
         if (selectbar1 === '') {
             messages.push("You need to select a student or assignment =" + selectbar1);

@@ -174,7 +174,7 @@ $(function() {
       $('#display_table').html('');
       return;
     }
-    debugger;
+    //debugger;
     //GET /course_offerings/:user_id/:inst_section_id
     var request = "/course_offerings/" + $('#combobox').find('option:selected').val() + "/" + $('#comb').find('option:selected').val();
 

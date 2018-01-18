@@ -33,9 +33,13 @@ tr:nth-child(even) {
   </tr>
   <% @odsa_exercise_progress.collect! do |d| %>
   <tr">
-    <% d.attributes.each do |x, y| %>
-    <th style="border: 1px solid #dddddd;text-align: left; padding: 8px;"><%= y %></th>
-    <% end %>
+    <th style="border: 1px solid #dddddd;text-align: left; padding: 8px;"><%= d.user_id %></th>
+    <th style="border: 1px solid #dddddd;text-align: left; padding: 8px;"><%= d.current_score %></th>
+    <th style="border: 1px solid #dddddd;text-align: left; padding: 8px;"><%= d.highest_score %></th>
+    <th style="border: 1px solid #dddddd;text-align: left; padding: 8px;"><%= d.total_correct %></th>
+    <th style="border: 1px solid #dddddd;text-align: left; padding: 8px;"><%= d.proficient_date %></th>
+    <th style="border: 1px solid #dddddd;text-align: left; padding: 8px;"><%= d.first_done %></th>
+    <th style="border: 1px solid #dddddd;text-align: left; padding: 8px;"><%= d.last_done %></th>
   </tr>
 <% end %>
 </table>
@@ -56,9 +60,17 @@ tr:nth-child(even) {
   </tr>
   <% @odsa_exercise_attempts.collect! do |d| %>
   <tr">
-    <% d.attributes.each do |x, y| %>
-    <th style="border: 1px solid #dddddd;text-align: left; padding: 8px;"><%= y %></th>
-    <% end %>
+    <th style="border: 1px solid #dddddd;text-align: left; padding: 8px;"><%= d.id %></th>
+    <th style="border: 1px solid #dddddd;text-align: left; padding: 8px;"><%= d.user_id %></th>
+    <th style="border: 1px solid #dddddd;text-align: left; padding: 8px;"><%= d.question_name %></th>
+    <th style="border: 1px solid #dddddd;text-align: left; padding: 8px;"><%= d.request_type %></th>
+    <th style="border: 1px solid #dddddd;text-align: left; padding: 8px;"><%= d.correct %></th>
+    <th style="border: 1px solid #dddddd;text-align: left; padding: 8px;"><%= d.worth_credit %></th>
+    <th style="border: 1px solid #dddddd;text-align: left; padding: 8px;"><%= d.time_done %></th>
+    <th style="border: 1px solid #dddddd;text-align: left; padding: 8px;"><%= d.time_taken %></th>
+    <th style="border: 1px solid #dddddd;text-align: left; padding: 8px;"><%= d.earned_proficiency %></th>
+    <th style="border: 1px solid #dddddd;text-align: left; padding: 8px;"><%= d.pe_score %></th>
+    <th style="border: 1px solid #dddddd;text-align: left; padding: 8px;"><%= d.pe_steps_fixed %></th>
   </tr>
 <% end %>
 </table>
