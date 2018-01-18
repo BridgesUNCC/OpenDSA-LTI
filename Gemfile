@@ -75,7 +75,7 @@ group :development, :test do
   gem 'byebug'
 end
 gem 'faker'
-gem 'factory_girl_rails'
+gem 'factory_bot_rails'
 gem 'log_file'
 
 group :test do
