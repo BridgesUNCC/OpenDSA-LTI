@@ -1,7 +1,7 @@
 # config/initializers/assets.rb
 Rails.application.config.assets.precompile << Proc.new do |path|
   if path =~ /\.(css|js)\z/ && path !~ /bootstrap-social/
-    full_path = Rails.application.assets_manifest.find(path).first.filename
+    full_path = Rails.application.assets_manifest.find_sources(path)
     if full_path.size == nil
       false
     else
