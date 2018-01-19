@@ -22,7 +22,7 @@ gem 'nokogiri'
 gem 'csv_shaper'
 gem 'andand', github: 'raganwald/andand'
 gem 'foreigner'
-gem 'responders'#, '~> 1.1' # Can't move above 1.1 until migrating to rails 4.2+
+gem 'responders'
 gem 'friendly_id', '~> 5'
 gem 'active_record-acts_as'
 gem 'acts_as_list'
@@ -101,7 +101,7 @@ gem 'omniauth-cas'
 gem 'cancancan'
 gem 'activeadmin', github: 'activeadmin'
 gem 'active_skin', github: 'rstgroup/active_skin'
-gem 'exception_handler'
+gem 'exception_handler', '~> 0.6.5'
 
 gem 'kaminari'        # Auto-paginated views
 gem 'remotipart'      # Adds support for remote mulitpart forms (file uploads)

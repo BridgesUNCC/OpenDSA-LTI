@@ -1,4 +1,4 @@
-# config valid only for Capistrano 3.1
+# config valid only for Capistrano 3.10.1
 lock '3.10.1'
 
 set :application, 'OpenDSA-LTI'
