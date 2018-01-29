@@ -22,6 +22,8 @@ module CodeWorkout
     # config.i18n.default_locale = :de
     config.assets.precompile += %w(*.png *.jpg *.jpeg *.gif)
     config.assets.precompile += %w( split.min.js )
+
+    config.assets.precompile += [ Dir["#{Rails.root}/app/assets/**/*"].reject {|fn| (fn !~ /\.(scss|css|js)\z/) || (fn =~ /bootstrap-social/)}]
     # config.assets.paths << Rails.root.join('vendor', 'assets', 'bower_components')
 
     # Custom directories with classes and modules you want to be autoloadable.
