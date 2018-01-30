@@ -99,7 +99,7 @@ gem 'omniauth-facebook'
 gem 'omniauth-google-oauth2'
 gem 'omniauth-cas'
 gem 'cancancan'
-gem 'activeadmin', github: 'activeadmin'
+gem 'activeadmin', github: 'activeadmin', tag: 'v1.1.0'
 gem 'active_skin', github: 'rstgroup/active_skin'
 gem 'exception_handler', '~> 0.6.5'
 
