@@ -1,4 +1,7 @@
 class CompileBookJob < ProgressJob::Base
+
+  require 'active_record'
+
   def initialize(inst_book_id, user_id)
     @user_id = user_id
     @inst_book = InstBook.find_by(id: inst_book_id)

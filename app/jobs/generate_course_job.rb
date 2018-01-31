@@ -1,4 +1,7 @@
 class GenerateCourseJob < ProgressJob::Base
+
+  require "active_record"
+
   def initialize(inst_book_id, launch_url, resource_selection_url, user_id)
     @user_id = user_id
     @user = User.find_by(id: user_id)
