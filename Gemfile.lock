@@ -1,5 +1,5 @@
 GIT
-  remote: git://github.com/capistrano/rbenv.git
+  remote: https://github.com/capistrano/rbenv.git
   revision: b8807f3bbb3f424ac42cc8838a38822e028d0aa3
   specs:
     capistrano-rbenv (2.1.4)
@@ -7,19 +7,19 @@ GIT
       sshkit (~> 1.3)
 
 GIT
-  remote: git://github.com/net-ssh/net-ssh.git
+  remote: https://github.com/net-ssh/net-ssh.git
   revision: 95ec1341fa201fd8756cb8fe2d04b55e00213221
   specs:
     net-ssh (5.1.0)
 
 GIT
-  remote: git://github.com/raganwald/andand.git
+  remote: https://github.com/raganwald/andand.git
   revision: d6c4545b6649c70495c26e2038206c5fdb2d14d6
   specs:
     andand (1.3.3)
 
 GIT
-  remote: git://github.com/voormedia/rails-erd.git
+  remote: https://github.com/voormedia/rails-erd.git
   revision: e666706a11b703607542f1b14576204c7987ca67
   specs:
     rails-erd (1.5.2)
