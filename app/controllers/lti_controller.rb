@@ -24,6 +24,7 @@ class LtiController < ApplicationController
     # I change this to be custom intanbook id becuase it is not working on mine yet
     if params.has_key?(:custom_course_offering_id)
       launch_instructor_tool()
+      return
     end
 
     file_name = nil
@@ -45,14 +46,9 @@ class LtiController < ApplicationController
     isFullModule = request_params.key?('instChapterModuleId')
 
     if isFullModule
-      mod_prog = OdsaModuleProgress.includes(:lms_access).find_by(inst_chapter_module_id: request_params['instChapterModuleId'],
-                                                                  user_id: current_user.id)
-      res = mod_prog.post_score_to_lms()
-      if res.success?
-        render :json => {:message => 'success', :res => res.to_json}.to_json
-      else
-        render :json => {:message => 'failure', :res => res.to_json}.to_json, :status => :bad_request
-      end
+      # we check if the module score needs to be sent to the LMS whenever
+      # an exercise attempt is recorded. See odsa_module_progress.rb
+      render :json => {:message => 'deprecated endpoint'}.to_json
       return
     end
 
@@ -122,13 +118,13 @@ class LtiController < ApplicationController
         inst_section.time_posted = Time.now
         inst_section.save!
       end
-      render :json => {:message => 'success', :res => res.to_json}.to_json
+      render :json => {:message => 'success', :res => res.as_json}.to_json
     else
       if hasBook
         inst_section.lms_posted = false
         inst_section.save!
       end
-      render :json => {:message => 'failure', :res => res.to_json}.to_json, :status => :bad_request
+      render :json => {:message => 'failure', :res => res.as_json}.to_json, :status => :bad_request
       error = Error.new(:class_name => 'post_replace_result_fail',
                         :message => res.inspect, :params => request_params.to_s)
       error.save!
@@ -158,6 +154,11 @@ class LtiController < ApplicationController
     # must include the oauth proxy object
     require 'oauth/request_proxy/rack_request'
     $oauth_creds = LmsAccess.get_oauth_creds(params[:oauth_consumer_key])
+    if $oauth_creds.blank?
+      @message = 'Please make sure the consumer key is set correctly in the tool configuration in the LMS.'
+      render 'error'
+      return
+    end
 
     render('error') and return unless lti_authorize!
 
@@ -227,7 +228,7 @@ class LtiController < ApplicationController
     oauth_info = OAuth.generate_oauth_params(consumer_key, consumer_secret, return_url,
                                              content_item_params)
 
-    render :json => oauth_info.to_json, :status => :ok
+    render :json => oauth_info.as_json, :status => :ok
   end
 
   def launch_extrtool
@@ -271,10 +272,7 @@ class LtiController < ApplicationController
     launch_params["lti_message_type"] = "basic-lti-launch-request"
     launch_params["lti_version"] = "LTI-1p0"
     launch_params["resource_link_id"] = "#{exercise.id}"
-    # TODO: Remove "00.00.00" once CodeWorkout update is deployed.
-    # This is only included as a temporary workaround to get CodeWorkout
-    # to recognize that the workout we are requesting is "from a collection"
-    launch_params["resource_link_title"] = "00.00.00 - #{exercise.inst_exercise.short_name}"
+    launch_params["resource_link_title"] = exercise.inst_exercise.short_name
     launch_params["tool_consumer_info_product_family_code"] = "opendsa"
     launch_params["user_id"] = "#{current_user.id}"
     launch_params["lis_person_name_given"] = current_user.first_name
@@ -333,7 +331,6 @@ class LtiController < ApplicationController
         # update the score for the module containing the exercise
         mod_prog = OdsaModuleProgress.get_progress(user_id, inst_chapter_module.id, bk_sec_ex.inst_book_id)
         mod_prog.update_proficiency(bk_sec_ex.inst_exercise)
-        mod_prog.post_score_to_lms()
 
         res.description = "Your old score of #{old_score} has been replaced with #{score}"
         res.code_major = 'success'
@@ -420,52 +417,25 @@ class LtiController < ApplicationController
   end
 
   def launch_instructor_tool
+    if !user_signed_in? || !@course_offering.is_instructor?(current_user)
+      @message = 'You must be signed in as an instructor for this course offering.'
+      render 'error'
+      return
+    end
+
     @course_enrollment = CourseEnrollment.where("course_offering_id=?", @course_offering.id)
     @student_list = []
     @course_enrollment.each do |s|
       q = User.where("id=?", s.user_id).select("id, first_name, last_name").first
       @student_list.push(q)
-      #puts "helloo"
       @student_list = @student_list.sort_by &:first_name
     end
 
     @course_id = @course_offering.id
     @instBook = @course_offering.odsa_books.first
 
-    @exercise_list = Hash.new { |hsh, key| hsh[key] = [] }
+    @chapter_list = InstChapter.includes(inst_chapter_modules: [:inst_module]).where("inst_book_id = ? AND inst_chapter_modules.lms_assignment_id IS NOT NULL", @instBook.id).references(:inst_chapter_modules)
 
-    chapters = InstChapter.where(inst_book_id: @instBook.id).order('position')
-    chapters.each do |chapter|
-      modules = InstChapterModule.where(inst_chapter_id: chapter.id).order('module_position')
-      modules.each do |inst_ch_module|
-        sections = InstSection.where(inst_chapter_module_id: inst_ch_module.id)
-        section_item_position = 1
-        if !sections.empty?
-          sections.each do |section|
-            title = (chapter.position.to_s.rjust(2, "0") || "") + "." +
-                    (inst_ch_module.module_position.to_s.rjust(2, "0") || "") + "." +
-                    section_item_position.to_s.rjust(2, "0") + " - "
-            learning_tool = nil
-            if section
-              title = title + section.name
-              learning_tool = section.learning_tool
-              if !learning_tool
-                if section.gradable
-                  attempted = OdsaExerciseAttempt.where(inst_section_id: section.id)
-                  if attempted.empty?
-                    @exercise_list[section.id].push(title)
-                  else
-                    @exercise_list[section.id].push(title)
-                    @exercise_list[section.id].push('attemp_flag')
-                  end
-                end
-              end
-            end
-            section_item_position += 1
-          end
-        end
-      end
-    end
     render 'show_table.html.haml' and return
   end
 
@@ -513,9 +483,10 @@ class LtiController < ApplicationController
         @message = 'OpenDSA: Unable to uniquely identify user'
         return false
       end
-      email = "student_view@example.com"
+      email = OpenDSA::STUDENT_VIEW_EMAIL
     end
     @user = User.where(email: email).first
+
     if @user.blank?
       # TODO: should mark this as LMS user then prevent this user from login to opendsa domain
       @user = User.new(:email => email,
@@ -530,6 +501,11 @@ class LtiController < ApplicationController
         error.save!
         return false
       end
+    elsif @user.first_name != params[:lis_person_name_given] || @user.last_name != params[:lis_person_name_family]
+      # update user's name
+      @user.first_name = params[:lis_person_name_given]
+      @user.last_name = params[:lis_person_name_family]
+      @user.save
     end
     successful = sign_in @user
     unless successful

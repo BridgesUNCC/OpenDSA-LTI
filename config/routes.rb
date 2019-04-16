@@ -1,4 +1,4 @@
-CodeWorkout::Application.routes.draw do
+OpenDSA::Application.routes.draw do
   root 'home#index'
 
   post 'lti/launch'
@@ -49,6 +49,7 @@ CodeWorkout::Application.routes.draw do
     get 'opendsa-canvas' => 'guides#opendsa-canvas', as: :guide_canvas
     get 'opendsa-moodle' => 'guides#opendsa-moodle', as: :guide_moodle
     get 'opendsa-book-configuration' => 'guides#opendsa-book-configuration', as: :guide_book_configuration
+    get 'opendsa-embed' => 'guides#opendsa-embed', as: :guide_embed
   end
 
   # routes anchored at /admin
@@ -64,6 +65,7 @@ CodeWorkout::Application.routes.draw do
 
   post 'inst_books/update' => 'inst_books#update', as: :book_update
   post 'inst_books/:id' => 'inst_books#compile', defaults: {format: 'js', data: {type: "script"}}, as: :compile
+  get 'inst_books/:id/validate' => 'inst_books#validate_configuration', as: :book_validate
   get 'inst_books/configure/:id' => 'inst_books#configure', as: :book_configure
   get 'inst_books/configurations/:id' => 'inst_books#configuration', as: :book_configuration
   resources :inst_books
@@ -80,6 +82,7 @@ CodeWorkout::Application.routes.draw do
   post '/course_offerings' => 'course_offerings#create', as: :create_course_offerings
   get '/course_offerings/:id' => 'course_offerings#show', as: :show_course_offerings
   get '/course_offerings/:user_id/:inst_section_id' => 'course_offerings#find_attempts', as: :find_attempts
+  get '/course_offerings/:id/modules/:inst_chapter_module_id/progresses' => 'course_offerings#find_module_progresses', as: :find_module_progresses
   get '/course_offerings/:user_id/:id/exercise_list' => 'course_offerings#get_individual_attempt', as: :get_individual_attempt
   get '/lms_accesses/:lms_instance_id/search' => 'lms_accesses#search', as: :lms_access_search
   get '/request_extension' => 'workout_offerings#request_extension'

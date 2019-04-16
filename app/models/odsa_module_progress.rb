@@ -40,7 +40,23 @@ class OdsaModuleProgress < ActiveRecord::Base
 
     self.first_done ||= DateTime.now
     self.last_done = DateTime.now
+    old_score = self.highest_score
     update_score(bk_sec_exs)
+
+    # Comparing two floats.
+    # Only send score to LMS if the score has increased.
+    if (self.highest_score - old_score).abs > 0.001
+      res = post_score_to_lms()
+      unless res.blank?
+        # res will be null if this module isn't linked to an LMS assignment
+        unless res.success?
+          # Failed to post score to LMS.
+          # Keep old score so that if the student attempts the exercise again
+          # we will try to send the new score again.
+          self.highest_score = old_score
+        end
+      end
+    end
     self.save!
 
     last_exercise = false
@@ -56,7 +72,6 @@ class OdsaModuleProgress < ActiveRecord::Base
           self.save!
           return true
         else
-          self.save!
           return false
         end
       else
@@ -82,7 +97,7 @@ class OdsaModuleProgress < ActiveRecord::Base
       unless res.success?
         error = Error.new(:class_name => 'post_replace_result_fail',
                           :message => res.inspect,
-                          :params => self.to_json.to_s)
+                          :params => self.as_json.to_json)
         error.save!
       end
       return res

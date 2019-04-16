@@ -6,8 +6,7 @@ require 'rails/all'
 # you've limited to :test, :development, or :production.
 Bundler.require(:default, Rails.env)
 
-module CodeWorkout
-  EXERCISES_SOLVED = 2305932
+module OpenDSA
   class Application < Rails::Application
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
@@ -26,11 +25,6 @@ module CodeWorkout
 
     # Custom directories with classes and modules you want to be autoloadable.
     # config.autoload_paths += %W(#{config.root}/extras)
-
-    # Exception handler
-    config.exception_handler = {
-      db: true
-    }
 
     # configure delayed job system
     config.active_job.queue_adapter = :delayed_job

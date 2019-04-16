@@ -1,8 +1,8 @@
 
 source 'https://rubygems.org'
 
-gem 'rails'
-gem 'bootstrap-sass', '~> 3.2.0'
+gem 'rails', '< 5'
+gem 'bootstrap-sass', '>= 3.4.1'
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
 gem 'bootstrap-editable-rails'
@@ -61,7 +61,7 @@ end
 
 group :development, :test do
   gem 'sqlite3'
-  gem 'mysql2', '= 0.3.15'
+  gem 'mysql2'
   gem 'rspec-rails', '>=3.4.2'
   gem 'annotate'
   gem 'rails-erd', github: 'voormedia/rails-erd'
@@ -84,7 +84,7 @@ group :test do
 end
 
 group :production, :staging do
-  gem 'mysql2', '= 0.3.15'
+  gem 'mysql2'
   gem 'faker'
 end
 
@@ -100,8 +100,8 @@ gem 'omniauth-facebook'
 gem 'omniauth-google-oauth2'
 gem 'omniauth-cas'
 gem 'cancancan'
-gem 'activeadmin'
-gem 'exception_handler', '~> 0.6.5'
+gem 'activeadmin', '< 2.0'
+gem 'exception_handler', '~> 0.3.45'
 
 gem 'kaminari'        # Auto-paginated views
 gem 'remotipart'      # Adds support for remote mulitpart forms (file uploads)
